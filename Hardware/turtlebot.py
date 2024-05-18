@@ -2,14 +2,12 @@
 import rospy
 import geometry_msgs.msg
 from nav_msgs.msg import Odometry
-from controllernew import PID_Controller
-import tf
-import numpy as np
+from controller1 import PID_Controller
 
 
 
 class turtlebot3():
-    def __init__(self,name='burger'):
+    def __init__(self,name=['burger','waffle_pi']):
         self.bot_name = name
 
         self.x = 0
@@ -36,24 +34,16 @@ class turtlebot3():
     def move(self,dest):
         x_dest = dest[0]
         y_dest = dest[1]
-        # print([self.x,self.y],[x_dest,y_dest])
-        # euler = [i for i in tf.transformations.euler_from_quaternion(self.bot_quat)]
-        # d=0.04
-        # if self.bot_name == "waffle":
-        #     d=0.08
-        # # d=0
-        # # [new_x,new_y] = 
 
-        self.error = [x_dest - self.x ,
-                  y_dest - self.y]        
+        error = [x_dest - self.x,
+                  y_dest - self.y]
         
+        linear , angular= 0,0
+        #if abs(error[0])>0.001 or abs(error[1])>0.001: 
+        linear, angular = self.PIDController.track(error,self.bot_quat)
         
-        linear, angular = self.PIDController.track(self.error,self.bot_quat)
-        
-        # if self.bot_name=="burger_1" or self.bot_name=="burger_2":
-        #     print(self.bot_name, linear)
+
         cmd = geometry_msgs.msg.Twist()
-        # print(linear)
         cmd.linear.x = linear
         # cmd.linear.x = 0
         cmd.angular.z = angular
@@ -73,3 +63,10 @@ class turtlebot3():
         cmd.angular.z = 0
         self.turtle_vel.publish(cmd)
 
+
+            # rate.sleep()
+
+# name = sys.argv[1]
+# # print(type(name))
+# a = turtlebot3(name)
+# a.move()

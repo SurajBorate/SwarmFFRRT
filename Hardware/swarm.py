@@ -3,21 +3,18 @@ import os
 from bezier import find_bezier_trajectory
 # os.system('rostopiv')
 #print('Resetting odom ... Wait for 5 seconds and then press Ctrl C.')
-os.system('rostopic pub /waffle/reset std_msgs/Empty "{}"')
-os.system('rostopic pub /burger_1/reset std_msgs/Empty "{}"')
-os.system('rostopic pub /burger_2/reset std_msgs/Empty "{}"')
-os.system('rostopic pub /burger_3/reset std_msgs/Empty "{}"')
-# os.system('rostopic pub /waffle_pi/reset std_msgs/Empty "{}"')
-# os.system('rostopic pub /firebird/reset std_msgs/Empty "{}"')
+os.system('rostopic pub /burger/reset std_msgs/Empty "{}"')
+os.system('rostopic pub /waffle_pi/reset std_msgs/Empty "{}"')
+os.system('rostopic pub /firebird/reset std_msgs/Empty "{}"')
 
 import rospy
 import numpy as np
 from turtlebot import turtlebot3
 import time
 # burger','waffle_pi',
-#','burger_1','burger_2','burger_3'
+
 class Swarm():
-    def __init__(self,bots=['waffle','burger_1','burger_2','burger_3']):
+    def __init__(self,bots=['waffle_pi']):
         rospy.init_node('swarm')
         self.botSwarm = []
         for i in range(len(bots)):
@@ -36,28 +33,26 @@ class Swarm():
         #        [0,1],[0.25,0],[0.5,1],[0.75,1],
         #        [1,1],[1,0.75],[1,0.5],[1,0.25],
         #        [1,0]]
-        pts1 = [[0,0],[0.3, 0.4], [0.6,0.5]]
-        pts2 = [[0,0], [1,0] ,[1,1]]
-        pts3 = [[0,0],[0.6,0]]
-        pts4 = [[0,0],[0.6,0]]
+        # pts1 = [[0,0],[0.06,0.4],[0.12,0.4],[2,0]]
+        # pts2 = [[0,0],[0.06,-0.4],[0.12,-0.4],[2,0]]
+        # pts3 = [[0,0],[0.06,0],[0.12,0],[2,0]]
 
-        #pts1 = np.array([[0,0],[-1,0]])
+        pts1 = np.array([[0,0],[1,0
+        ]])
         # pts2 = np.array([[0,0],[0.06,-0.4],[0.12,-0.4]])
         # pts3 = np.array[[0,0],[0.06,0],[0.12,0]]
 
         t=np.linspace(0,1,200)
-        
+        bez_points1 = find_bezier_trajectory(pts1,200,t)
 
         # print(bez_points1)
-        bez_points1 = find_bezier_trajectory(pts1,200,t)
-        bez_points2 = find_bezier_trajectory(pts2,200,t)
-        bez_points3 = find_bezier_trajectory(pts3,200,t)
-        bez_points4 = find_bezier_trajectory(pts4,200,t)
+        # bez_points2 = find_bezier_trajectory(pts2,100,t)
+        # bez_points3 = find_bezier_trajectory(pts3,100,t)
 
-        trajs = [bez_points1,bez_points2,bez_points3,bez_points4]
-        
+        # trajs = [bez_points1,bez_points2,bez_points3]
+        trajs = [bez_points1]
 
-        t_int = t*10
+        t_int = t*20
         # exit()
         iter = 0 
 
